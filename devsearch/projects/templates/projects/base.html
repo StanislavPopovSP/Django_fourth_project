@@ -19,5 +19,9 @@
 
 <body>
 
+{% include 'projects/navbar.html' %} <!--Через include подключаем navbar-->
+{% block content %}{% endblock %} <!--Сам navbar не видим, что бы мы могли его использовать корректно, для подключения этой шапки будем использовать block content-->
+<!--Подключим статические изображения-->
+
 </body>
 </html>
