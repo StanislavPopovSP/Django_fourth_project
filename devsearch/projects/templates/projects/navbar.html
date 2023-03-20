@@ -1,8 +1,9 @@
+{% load static %}
 <!--Header Section-->
 <header class="header">
     <div class="container container--narrow">
-        <a href="/" class="header__logo">
-            <img src="images/logo.svg" alt="DevSearch Logo"/>
+        <a href="{% url 'projects' %}" class="header__logo"> <!-- Добавим куда будет переходить логотип  -->
+            <img src="{% static 'images/logo.svg' %}" alt="DevSearch Logo"/>
         </a>
         <nav class="header__nav">
             <input type="checkbox" id="responsive-menu"/>

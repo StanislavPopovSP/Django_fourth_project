@@ -1,18 +1,20 @@
+{% load static %}
 <!-- Каркас, подключаться будут стили, JS-->
-<!doctype html>
+<!Doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
-    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/> <!-- Для адаптации -->
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/> <!-- интернет explorer приравнивается к edge  -->
+
     <!-- Favicon -->
-    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon"/>
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon"/> <!-- Относительные пути нужно делать шаблоном -->
     <!-- Icon - font-awesom -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"> <!-- Абсолютные пути мы не меняем, они автоматически подключаются. -->
     <!-- Mumble UI -->
-    <link rel="stylesheet" href="uikit/styles/uikit.css"/>
+    <link rel="stylesheet" href="{% static 'uikit/styles/uikit.css' %}"/>
     <!--Dev Search UI -->
-    <link rel="stylesheet" href="styles/app.css"/>
+    <link rel="stylesheet" href="{% static 'styles/app.css' %}"/>
 
     <title>DevSearch - Connect with Developers!</title>
 </head>
