@@ -8,3 +8,16 @@ class Project(models.Model):
     demo_link = models.CharField(max_length=2000, null=True, blank=True) # будет два перехода
     source_link = models.CharField(max_length=2000, null=True, blank=True)
     tags = models.ManyToManyField('Tag', blank=True)
+    vote_total = models.IntegerField(default=0, null=True, blank=True) # для подсчёта кол-ва процентов
+    vote_ratio = models.IntegerField(default=0, null=True, blank=True) # для подсчёта кол-ва
+    created = models.DateTimeField(auto_now_add=True)  # Дата создания какого-то проекта.
+
+    def __str__(self):
+        return self.title
+
+class Tag(models.Model):
+    name = models.CharField(max_length=200)
+    created = models.DateTimeField(auto_now_add=True) # Дата создания тега
+
+    def __str__(self):
+        return self.name
