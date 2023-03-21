@@ -15,8 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('projects.urls')), # подключаем документ по пути
+    path('', include('projects.urls')),  # подключаем документ по пути
 ]
+
+# Мы можем сделать что пути будут добавляться только в тот момент, когда мы работаем в режиме разработки.
+if settings.DEBUG: # Если в режиме разработки, то у нас будет использоваться urlpatterns что бы картинки отображались корректно. Когда сайт выкладывать на продакшен, когда он готовый, на хостингах это реализуется по другому. Если выложили на хостинг данная настройка отрабатывать уже не будет. Пути настраиваютя на самом хостинге.
+   urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) # Объединяем settings.MEDIA_URL с document_root=settings.MEDIA_ROOT Что бы у нас корректно отображались изображения.
