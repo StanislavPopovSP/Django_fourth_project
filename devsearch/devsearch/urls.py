@@ -20,7 +20,8 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('projects.urls')),  # подключаем документ по пути
+    path('projects/', include('projects.urls')),  # подключаем документ по пути, делаем главную страницу index.html
+    path('', include('users.urls')),  # подключаем пути проекта users
 ]
 
 # Мы можем сделать что пути будут добавляться только в тот момент, когда мы работаем в режиме разработки.
