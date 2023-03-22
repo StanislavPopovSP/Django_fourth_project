@@ -32,11 +32,11 @@
                 {% for project in projects %}
                 <div class="column">
                     <div class="card project">
-                        <a href="single-project.html" class="project">
+                        <a href="{% url 'project' project.id %}" class="project">
                             <img class="project__thumbnail" src="{{ project.featured_image.url }}" alt="project thumbnail">
                             <div class="card__body">
                                 <h3 class="project__title">{{ project.title }}</h3>
-                                <p><a class="project__author" href="profile.html">By Dennis Ivanov</a></p>
+                                <p><a class="project__author" href="{% url 'project' project.id %}">By Dennis Ivanov</a></p>
                                 <p class="project--rating">
                                     <span style="font-weight: bold;">{{ project.vote_total }}%</span> Postitive
                                     Feedback ({{ project.vote_ratio }} Vote{{ project.vote_ratio|pluralize:'s' }}) <!--Множественное или единственное число |pluralize: 's' - (склонение слов во множественном числе в шаблонах django)-->
