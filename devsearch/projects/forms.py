@@ -1,10 +1,15 @@
 from django.forms import ModelForm
 from .models import Project
+from django import forms # для изменения в форме поля Tags
 
 class ProjectForm(ModelForm):
     class Meta: # Что бы конкретно что-то выводилось на нашу страницу, какие поля попадали в элементы формы, нужен класс Meta.
         model = Project
         fields = ['title', 'featured_image', 'description', 'demo_link', 'source_link', 'tags'] # какие поля попадут в форму
+
+        widgets = {
+            'tags': forms.CheckboxSelectMultiple()  # Вывел Checkbox поле теги
+        }
 
         # Добавим к форме стили которые предустановлены.
     def __init__(self, *args, **kwargs):
