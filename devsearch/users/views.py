@@ -1,4 +1,7 @@
 from django.shortcuts import render
+from .models import Profile
 
 def profiles(request):
-    return render(request, 'users/index.html')
+    prof = Profile.objects.all()
+    context = {'profiles': prof}
+    return render(request, 'users/index.html', context)
