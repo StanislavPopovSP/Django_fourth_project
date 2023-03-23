@@ -9,4 +9,8 @@ def profiles(request):
 
 
 def user_profile(request, pk):
-    return render(request, 'users/profile.html')
+    prof = Profile.objects.get(id=pk)
+    context = {
+        'profile': prof
+    }
+    return render(request, 'users/profile.html', context)
