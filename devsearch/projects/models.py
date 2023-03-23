@@ -1,6 +1,8 @@
 from django.db import models
+from users.models import Profile
 
 class Project(models.Model):
+    owner = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True, blank=True)
     title = models.CharField(max_length=200) # Название самого какого то проекта
     description = models.TextField(null=True, blank=True) # Поле по больше(Пустое поле, по умолчанию null)
     featured_image = models.ImageField(null=True, blank=True, upload_to='projects/%Y/%m/%d/', default='default.jpg') # Поле для изображения, поле будет заполняться динамически. upload_to - указывает по какому пути будет загружаться изображение. default='default.jpg' не указываем путь к папке, значит она должна лежать в медиа.

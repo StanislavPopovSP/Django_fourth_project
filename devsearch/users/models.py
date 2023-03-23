@@ -24,7 +24,7 @@ class Profile(models.Model):
 
 class Skill(models.Model):
     """Модель, отвечающая за навыки пользователя"""
-    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True)
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True) # Владелец скилов.
     name = models.CharField(max_length=200, blank=True, null=True) # имя самого навыка
     description = models.TextField(blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
