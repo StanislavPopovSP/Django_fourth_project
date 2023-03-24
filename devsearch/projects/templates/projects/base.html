@@ -22,6 +22,18 @@
 <body>
 
 {% include 'projects/navbar.html' %} <!--Через include подключаем navbar-->
+
+{% if messages %} <!-- Если есть ошибка, то попадать будем только сюда -->
+{% for message in messages %} <!-- Этих ошибок может быть несколько -->
+<div style="text-align: center">
+    <div class="alert alert--{{ message.tags }}"> <!-- (В виде класса) Здесь будет подставляться какой-то цвет у ошибки -->
+        <p class="alert__message">{{ message }}</p>
+        <button class="alert__close">x</button> <!-- Кнопка, что бы закрыть всплывающее окно -->
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+
 {% block content %}{% endblock %} <!--Сам navbar не видим, что бы мы могли его использовать корректно, для подключения этой шапки будем использовать block content-->
 
 </body>
