@@ -3,18 +3,20 @@ from .models import Project
 from .forms import ProjectForm
 
 def projects(request):
+    """Функция, отвечает за доступ ко всем объектам таблицы"""
     pr = Project.objects.all()
     context = {'projects': pr}
     return render(request, 'projects/projects.html', context)
 
 
 def project(request, pk):
-    """Функция, будет возвращать страницу просмотра отдельного проекта"""
+    """Функция, отвечает за доступ конкретного поля таблицы"""
     project_obj = Project.objects.get(id=pk)
     return render(request, 'projects/single-project.html', {'project': project_obj})
 
 
 def create_project(request):
+    """Функция, отвечает за отправку данных какого-то проекта"""
     form = ProjectForm()
 
     if request.method == 'POST':
