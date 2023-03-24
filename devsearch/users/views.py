@@ -3,6 +3,7 @@ from .models import Profile
 from django.contrib.auth import logout, login, authenticate  # есть готовый элемент который делает разлогинивание
 from django.contrib.auth.models import User  # Нужно связать БД пользователей кот-я есть с моделью пользователей.
 from django.core.exceptions import ObjectDoesNotExist  # Нужно предусмотреть ошибку если пользователя не будет в БД. ObjectDoesNotExist - объект не существует.
+from django.contrib import messages  # Через ошибки message, можно вывести информацию для пользователя.
 
 
 def login_user(request):
@@ -15,16 +16,16 @@ def login_user(request):
         password = request.POST['password']
         # Хотим получить данные из модели по этому имени. Проверку сделать.
         try:
-            user = User.objects.get(username=username) # проверяем пользователя, если все ок, он уникальный
-        except ObjectDoesNotExist: # если не ок
-            print('Username does not exists')
+            user = User.objects.get(username=username)  # проверяем пользователя, если все ок, он уникальный
+        except ObjectDoesNotExist:  # если не ок
+            messages.error(request, 'Username does not exists')
 
-        user = authenticate(request, username=username, password=password) # сохраняем
-        if user is not None: # если пользователь уникальный, авторизируй.
+        user = authenticate(request, username=username, password=password)  # сохраняем
+        if user is not None:  # если пользователь уникальный, авторизируй.
             login(request, user)
             return redirect('profiles')
         else:
-            print('Username or password is incorrect')
+            messages.error(request, 'Username or password is incorrect')
 
     return render(request, 'users/login_register.html')
 
@@ -32,6 +33,7 @@ def login_user(request):
 def logout_user(request):
     """Функция, отвечает за кнопку выхода"""
     logout(request)
+    messages.error(request, 'User was logged out!')
     return redirect('login')
 
 
