@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Project
 from .forms import ProjectForm
+from django.contrib.auth.decorators import login_required # Декоратор для того что бы только пользователь смог что то делать
 
 def projects(request):
     """Функция, отвечает за доступ ко всем объектам таблицы"""
@@ -14,9 +15,9 @@ def project(request, pk):
     project_obj = Project.objects.get(id=pk)
     return render(request, 'projects/single-project.html', {'project': project_obj})
 
-
+@login_required(login_url='login') # перенаправляет на страницу незарегистрированного пользователя
 def create_project(request):
-    """Функция, отвечает за отправку данных какого-то проекта"""
+    """Функция, отвечает за создание какого-то проекта, для авторизированного пользователя."""
     form = ProjectForm()
 
     if request.method == 'POST':
