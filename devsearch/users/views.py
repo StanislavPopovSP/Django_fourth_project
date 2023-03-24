@@ -1,5 +1,15 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Profile
+from django.contrib.auth import logout # есть готовый элемент который делает разлогинивание
+
+
+def login_user(request):
+    return render(request, 'users/login_register.html')
+
+
+def logout_user(request):
+    logout(request) # доп модуль для выхода
+    return redirect('login')
 
 
 def profiles(request):
@@ -20,3 +30,5 @@ def user_profile(request, pk):
         'other_skills': other_skills,
     }
     return render(request, 'users/profile.html', context)
+
+
