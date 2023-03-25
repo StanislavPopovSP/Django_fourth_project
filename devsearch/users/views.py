@@ -4,6 +4,7 @@ from django.contrib.auth import logout, login, authenticate  # есть гото
 from django.contrib.auth.models import User  # Нужно связать БД пользователей кот-я есть с моделью пользователей.
 from django.core.exceptions import ObjectDoesNotExist  # Нужно предусмотреть ошибку если пользователя не будет в БД. ObjectDoesNotExist - объект не существует.
 from django.contrib import messages  # Через ошибки message, можно вывести информацию для пользователя.
+from django.contrib.auth.forms import UserCreationForm
 
 
 def login_user(request):
@@ -33,7 +34,21 @@ def login_user(request):
 def register_user(request):
     """Функция, отвечает за регистрацию пользователя"""
     page = 'register'
-    context = {'page': page}
+    form = UserCreationForm() # получили внешний вид
+
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST) # указываем аргументы, которые будут вводиться пользователем
+        if form.is_valid(): # если данные введенные валидные, то -->
+            user = form.save(commit=False) # данные сохранились commit=False
+            user.username = user.username.lower() # переведем данные в нижний регистр(user будет отправляться в БД в нижнем регисте), что бы не привязываться к регистру(если брать данные).
+            user.save()
+
+            messages.success(request, 'User account was created!')
+
+    context = {
+        'page': page,
+        'form': form
+    }
     return render(request, 'users/login_register.html', context)
 
 
