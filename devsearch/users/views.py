@@ -34,23 +34,26 @@ def login_user(request):
 def register_user(request):
     """Функция, отвечает за регистрацию пользователя"""
     page = 'register'
-    form = UserCreationForm() # получили внешний вид
+    form = UserCreationForm()  # получили внешний вид
 
     if request.method == 'POST':
-        form = UserCreationForm(request.POST) # указываем аргументы, которые будут вводиться пользователем
-        if form.is_valid(): # если данные введенные валидные, то -->
-            user = form.save(commit=False) # данные сохранились commit=False
-            user.username = user.username.lower() # переведем данные в нижний регистр(user будет отправляться в БД в нижнем регисте), что бы не привязываться к регистру(если брать данные).
+        form = UserCreationForm(request.POST)  # указываем аргументы, которые будут вводиться пользователем
+        if form.is_valid():  # если данные введенные валидные, то -->
+            user = form.save(commit=False)  # данные сохранились commit=False
+            user.username = user.username.lower()  # переведем данные в нижний регистр(user будет отправляться в БД в нижнем регисте), что бы не привязываться к регистру(если брать данные).
             user.save()
-
+            login(request, user)  # После сохранения пользователя в БД, логиним пользователя.
             messages.success(request, 'User account was created!')
+            return redirect('profiles')  # И укажем страницу куда нужно перенаправить пользователя после того как зарегистрировался.
+
+        else:
+            messages.error(request, 'An error has occurred during registration') # ошибка при регистрации
 
     context = {
         'page': page,
         'form': form
     }
     return render(request, 'users/login_register.html', context)
-
 
 
 def logout_user(request):
