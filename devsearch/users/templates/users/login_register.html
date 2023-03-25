@@ -1,24 +1,19 @@
 {% extends 'projects/base.html' %}
 {% block content %}
-
-<form action="{% url 'login' %}" method="post">
-    {% csrf_token %}
-    <input type="text" name="username" placeholder="Username" >
-    <input type="password" name="password" placeholder="password" >
-    <input type="submit" value="Login">
-</form>
+{% load static %}
 
 <div class="auth">
       <div class="card">
         <div class="auth__header text-center">
           <a href="/">
-            <img src="images/icon.svg" alt="icon" />
+            <img src="{% static 'images/logo.svg' %}" alt="icon" />
           </a>
           <h3>Account Login</h3>
           <p>Hello Developer, Welcome Back!</p>
         </div>
 
-        <form action="#" class="form auth__form">
+        <form action="{% url 'login' %}" method="post" class="form auth__form">
+            {% csrf_token %}
           <!-- Input:Email -->
           <div class="form__field">
             <label for="formInput#text">Username: </label>
