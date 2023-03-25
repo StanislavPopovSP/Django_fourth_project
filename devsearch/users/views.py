@@ -6,6 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist  # Нужно предус
 from django.contrib import messages  # Через ошибки message, можно вывести информацию для пользователя.
 from django.contrib.auth.forms import UserCreationForm
 from .forms import CustomUserCreationForm
+from django.contrib.auth.decorators import login_required
 
 
 def login_user(request):
@@ -84,3 +85,17 @@ def user_profile(request, pk):
         'other_skills': other_skills,
     }
     return render(request, 'users/profile.html', context)
+
+@login_required(login_url='login') # Если не зарегистрировал что бы перенаправляло на данную страницу
+def user_account(request):
+    """Функция, отвечает за меню, поле мой аккаунт"""
+    prof = request.user.profile # сюда будем сохранять из пользователей профиль пользователя.
+    skills = prof.skill_set.all() # скилы аккаунта
+    projects = prof.project_set.all() # проекты аккаунта
+    context = {
+        'profile': prof,
+        'skills': skills,
+        'projects': projects
+    }
+
+    return render(request, 'users/account.html', context)
