@@ -30,6 +30,14 @@ def login_user(request):
     return render(request, 'users/login_register.html')
 
 
+def register_user(request):
+    """Функция, отвечает за регистрацию пользователя"""
+    page = 'register'
+    context = {'page': page}
+    return render(request, 'users/login_register.html', context)
+
+
+
 def logout_user(request):
     """Функция, отвечает за кнопку выхода"""
     logout(request)
