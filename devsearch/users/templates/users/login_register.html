@@ -3,78 +3,33 @@
 {% load static %}
 
 {% if page == 'register' %} <!-- если register, будет отрабатывать верхняя часть  -->
-<h1>Register User</h1>
 
-<form action="{% url 'register' %}" method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <input type="submit" value="Register User">
-</form>
-<p>Already have an account <a href="{% url 'login' %}">Sign Up</a></p> <!-- Если вы уже имеете аккаунт, переход на авторизацию login -->
 <div class="auth">
       <div class="card">
         <div class="auth__header text-center">
           <a href="/">
             <img src="{% static 'images/logo.svg' %}" alt="icon" />
           </a>
-          <h3>Account SignUp</h3>
+          <h3>Register an Account</h3>
           <p>Create a new developer account</p>
         </div>
 
-        <form action="#" class="form auth__form">
+        <form action="{% url 'register' %}" method="post" class="form auth__form">
+          {% csrf_token %}
+          {% for field in form %}
           <!-- Input:Text -->
           <div class="form__field">
-            <label for="formInput#text">Full Name: </label>
-            <input
-              class="input input--text"
-              id="formInput#text"
-              type="text"
-              name="text"
-              placeholder="e.g. Dennis Ivanov"
-            />
+            <label for="formInput#text">{{ field.label }}</label>
+            {{ field }}
           </div>
-
-          <!-- Input:Email -->
-          <div class="form__field">
-            <label for="formInput#email">Email Address: </label>
-            <input
-              class="input input--email"
-              id="formInput#email"
-              type="email"
-              name="email"
-              placeholder="e.g. user@domain.com"
-            />
-          </div>
-
-          <!-- Input:Password -->
-          <div class="form__field">
-            <label for="formInput#password">Password: </label>
-            <input
-              class="input input--password"
-              id="formInput#passowrd"
-              type="password"
-              name="password"
-              placeholder="••••••••"
-            />
-          </div>
-          <!-- Input:Password -->
-          <div class="form__field">
-            <label for="formInput#confirm-password">Confirm Password: </label>
-            <input
-              class="input input--password"
-              id="formInput#confirm-passowrd"
-              type="password"
-              name="confirm-password"
-              placeholder="••••••••"
-            />
-          </div>
+          {% endfor %}
           <div class="auth__actions">
             <input class="btn btn--sub btn--lg" type="submit" value="Sign  In" />
           </div>
         </form>
         <div class="auth__alternative">
           <p>Already have an Account?</p>
-          <a href="login.html">Log In</a>
+          <a href="{% url 'login' %}">Log In</a>
         </div>
       </div>
     </div>
