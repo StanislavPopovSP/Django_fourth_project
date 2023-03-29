@@ -116,3 +116,8 @@ def edit_account(request):
 
     context = {'form': form}
     return render(request, 'users/profile_form.html', context)
+
+@login_required(login_url='login')
+def create_skill(request):
+    context = {}
+    render(request, 'users/skill_form.html', context)
