@@ -18,13 +18,16 @@ def project(request, pk):
 @login_required(login_url='login') # перенаправляет на страницу незарегистрированного пользователя
 def create_project(request):
     """Функция, отвечает за создание какого-то проекта, для авторизированного пользователя."""
+    profile = request.user.profile # привяжем профиль пользователя к данной форме
     form = ProjectForm()
 
     if request.method == 'POST':
         form = ProjectForm(request.POST, request.FILES)
         if form.is_valid(): # проверяется валидность введенных данных, встроенная проверка.
-            form.save()
-            return redirect('projects') # перенаправим на какую-то страницу
+            project = form.save(commit=False)
+            project.owner = profile
+            project.save()
+            return redirect('account') # перенаправим на какую-то страницу
 
     context = {'form': form}
     return render(request, 'projects/form-template.html', context)
