@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
-from .models import Project
+from .models import Project, Tag
 from .forms import ProjectForm
-from django.contrib.auth.decorators import login_required # Декоратор для того что бы только пользователь смог что то делать
+from django.contrib.auth.decorators import login_required  # Декоратор для того что бы только пользователь смог что то делать
+
 
 def projects(request):
     """Функция, отвечает за доступ ко всем объектам таблицы"""
@@ -15,19 +16,59 @@ def project(request, pk):
     project_obj = Project.objects.get(id=pk)
     return render(request, 'projects/single-project.html', {'project': project_obj})
 
-@login_required(login_url='login') # перенаправляет на страницу незарегистрированного пользователя
+
+@login_required(login_url='login')  # перенаправляет на страницу незарегистрированного пользователя
 def create_project(request):
     """Функция, отвечает за создание какого-то проекта, для авторизированного пользователя."""
-    profile = request.user.profile # привяжем профиль пользователя к данной форме
+    profile = request.user.profile  # привяжем профиль пользователя к данной форме
     form = ProjectForm()
 
     if request.method == 'POST':
         form = ProjectForm(request.POST, request.FILES)
-        if form.is_valid(): # проверяется валидность введенных данных, встроенная проверка.
+        if form.is_valid():  # проверяется валидность введенных данных, встроенная проверка.
             project = form.save(commit=False)
             project.owner = profile
             project.save()
-            return redirect('account') # перенаправим на какую-то страницу
+            return redirect('account')  # перенаправим на какую-то страницу
 
     context = {'form': form}
     return render(request, 'projects/form-template.html', context)
+
+
+@login_required(login_url='login')
+def update_project(request, pk):
+    """Редактирует проект пользователя."""
+    profile = request.user.profile
+    project = profile.project_set.get(id=pk)  # нужно получить данные по профилю пользователя.
+    form = ProjectForm(instance=project)
+
+    if request.method == 'POST':
+        newtags = request.POST.get('newtags').replace(',', '').split()
+        form = ProjectForm(request.POST, request.FILES, instance=project)
+        if form.is_valid():
+            project = form.save()
+            for tag in newtags:
+                tag, created = Tag.objects.get_or_create(name=tag)  # будет возвращать либо тег кот-й сущ-ет, либо которого нету(новый) Метод get_or_create - получить или создать.
+                project.tags.add(tag)
+            return redirect('account')
+
+    context = {
+        'form': form,
+        'project': project
+    }
+
+    return render(request, 'project/form-template.html', context)
+
+@login_required(login_url='login')
+def delete_project(request, pk):
+    """Удаляет проект пользователя"""
+    profile = request.user.profile
+    project = profile.project_set.get(id=pk)
+
+    if request.method == 'POST':
+        project.delete()
+        return redirect('projects')
+
+    context = {'object': project}
+
+    return render(request, 'projects/delete.html', context)
