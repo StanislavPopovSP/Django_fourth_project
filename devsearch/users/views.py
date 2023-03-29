@@ -4,7 +4,7 @@ from django.contrib.auth import logout, login, authenticate  # есть гото
 from django.contrib.auth.models import User  # Нужно связать БД пользователей кот-я есть с моделью пользователей.
 from django.core.exceptions import ObjectDoesNotExist  # Нужно предусмотреть ошибку если пользователя не будет в БД. ObjectDoesNotExist - объект не существует.
 from django.contrib import messages  # Через ошибки message, можно вывести информацию для пользователя.
-from .forms import CustomUserCreationForm, ProfileForm
+from .forms import CustomUserCreationForm, ProfileForm, SkillForm
 from django.contrib.auth.decorators import login_required  # для закрытия доступа, незарегистрированных пользователей.
 
 
@@ -119,5 +119,17 @@ def edit_account(request):
 
 @login_required(login_url='login')
 def create_skill(request):
-    context = {}
-    render(request, 'users/skill_form.html', context)
+    profile = request.user.profile
+    form = SkillForm()
+
+    if request.method == 'POST':
+        form = SkillForm(request.POST) # мы получаем все данные кот-е будут отправляться методом POST
+        if form.is_valid():
+            skill = form.save(commit=False)
+            skill.owner = profile # связываем владельца скиллов с профилем
+            skill.save()
+            messages.success(request, 'Skill was added successfully!')
+            return redirect('account')
+
+    context = {'form': form}
+    return render(request, 'users/skill_form.html', context)
