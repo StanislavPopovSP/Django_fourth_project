@@ -10,6 +10,7 @@ urlpatterns = [
     path('logout/', views.logout_user, name='logout'), # выйти
     path('register/', views.register_user, name='register'), # регистрация
 
-    path('edit-account/', views.edit_account, name='edit-account'), # для редактирования пользователя
-    path('create-skill/', views.create_skill, name='create-skill'),
+    path('edit-account/', views.edit_account, name='edit-account'), # редактирования пользователя
+    path('create-skill/', views.create_skill, name='create-skill'), # добавление навыков
+    path('update-skill/<str:pk>/', views.update_skill, name='update-skill'), # редактирование навыков
 ]

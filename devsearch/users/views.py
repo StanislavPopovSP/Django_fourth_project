@@ -119,6 +119,7 @@ def edit_account(request):
 
 @login_required(login_url='login')
 def create_skill(request):
+    """Для добавления навыков"""
     profile = request.user.profile
     form = SkillForm()
 
@@ -129,6 +130,23 @@ def create_skill(request):
             skill.owner = profile # связываем владельца скиллов с профилем
             skill.save()
             messages.success(request, 'Skill was added successfully!')
+            return redirect('account')
+
+    context = {'form': form}
+    return render(request, 'users/skill_form.html', context)
+
+@login_required(login_url='login')
+def update_skill(request, pk):
+    """Для редактирования навыков"""
+    profile = request.user.profile
+    skill = profile.skill_set.get(id=pk)
+    form = SkillForm(instance=skill)
+
+    if request.method == 'POST':
+        form = SkillForm(request.POST, instance=skill) # мы получаем все данные кот-е будут отправляться методом POST, что бы эти данные привязывались к конкретному пользователю.
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Skill was update successfully!')
             return redirect('account')
 
     context = {'form': form}
