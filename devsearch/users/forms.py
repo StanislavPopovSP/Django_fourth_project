@@ -5,6 +5,7 @@ from django.forms import ModelForm # что бы данные брались и�
 
 
 class ProfileForm(ModelForm):
+    """Форма для редактирования пользователя """
     class Meta:
         model = Profile # Данные будем брать из модели Profile
         fields = ['name', 'email', 'username',
@@ -22,7 +23,7 @@ class ProfileForm(ModelForm):
 
 
 class CustomUserCreationForm(UserCreationForm):
-    """Класс, отвечает за создание своей формы, для регистрации пользователя"""
+    """Форма, для регистрации пользователя"""
 
     class Meta:
         model = User

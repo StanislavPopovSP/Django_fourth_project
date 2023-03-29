@@ -4,13 +4,12 @@ from django.contrib.auth import logout, login, authenticate  # есть гото
 from django.contrib.auth.models import User  # Нужно связать БД пользователей кот-я есть с моделью пользователей.
 from django.core.exceptions import ObjectDoesNotExist  # Нужно предусмотреть ошибку если пользователя не будет в БД. ObjectDoesNotExist - объект не существует.
 from django.contrib import messages  # Через ошибки message, можно вывести информацию для пользователя.
-from django.contrib.auth.forms import UserCreationForm
-from .forms import CustomUserCreationForm
-from django.contrib.auth.decorators import login_required # для закрытия доступа, незарегистрированных пользователей.
+from .forms import CustomUserCreationForm, ProfileForm
+from django.contrib.auth.decorators import login_required  # для закрытия доступа, незарегистрированных пользователей.
 
 
 def login_user(request):
-    # Функция, проверяет аутентифицирован пользователь или нет и отправляет данные для авторизации.
+    # Проверяет аутентификацию пользователя и отправляет данные для авторизации.
     if request.user.is_authenticated:
         return redirect('profiles')
 
@@ -34,7 +33,7 @@ def login_user(request):
 
 
 def register_user(request):
-    """Функция, отвечает за регистрацию пользователя"""
+    """Отвечает за регистрацию пользователя"""
     page = 'register'
     form = CustomUserCreationForm()  # получили внешний вид
 
@@ -49,7 +48,7 @@ def register_user(request):
             return redirect('profiles')  # И укажем страницу куда нужно перенаправить пользователя после того как зарегистрировался.
 
         else:
-            messages.error(request, 'An error has occurred during registration') # ошибка при регистрации
+            messages.error(request, 'An error has occurred during registration')  # ошибка при регистрации
 
     context = {
         'page': page,
@@ -59,21 +58,21 @@ def register_user(request):
 
 
 def logout_user(request):
-    """Функция, отвечает за кнопку выхода"""
+    """Отвечает за кнопку выхода"""
     logout(request)
     messages.error(request, 'User was logged out!')
     return redirect('login')
 
 
 def profiles(request):
-    """Функция, за доступ ко всем объектам профиля, какого-то пользователя"""
+    """Доступ ко всем объектам профиля, какого-то пользователя"""
     prof = Profile.objects.all()
     context = {'profiles': prof}
     return render(request, 'users/index.html', context)
 
 
 def user_profile(request, pk):
-    """Функция, отвечает за доступ конкретного поля таблицы"""
+    """Отвечает за доступ конкретного поля таблицы"""
     prof = Profile.objects.get(id=pk)
 
     top_skill = prof.skill_set.exclude(description__exact="")  # Исключаю элементы у которых описание пустое. description__exact="" - исключить элементы, которые будут содержать пустую строку(в виде описания).
@@ -86,12 +85,13 @@ def user_profile(request, pk):
     }
     return render(request, 'users/profile.html', context)
 
-@login_required(login_url='login') # login_url='login' - если не зарегистрировал что бы перенаправляло на данную страницу
+
+@login_required(login_url='login')  # login_url='login' - если не зарегистрировал что бы перенаправляло на данную страницу
 def user_account(request):
-    """Функция, отвечает за меню, поле мой аккаунт"""
-    prof = request.user.profile # сюда будем сохранять из пользователей профиль пользователя.
-    skills = prof.skill_set.all() # скилы аккаунта
-    projects = prof.project_set.all() # проекты аккаунта
+    """ Отвечает за меню, поле мой аккаунт"""
+    prof = request.user.profile  # сюда будем сохранять из пользователей профиль пользователя.
+    skills = prof.skill_set.all()  # скилы аккаунта
+    projects = prof.project_set.all()  # проекты аккаунта
     context = {
         'profile': prof,
         'skills': skills,
@@ -100,6 +100,19 @@ def user_account(request):
 
     return render(request, 'users/account.html', context)
 
+
 @login_required(login_url='login')
 def edit_account(request):
-    return render(request, 'users/profile_form.html')
+    """Выводит форму для редактирования пользователя и отправляет данные в БД"""
+    profile = request.user.profile
+    form = ProfileForm(instance=profile)  # что бы в форме были уже данные пользователя из его профиля.
+
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=profile)  # сохраняем в форму всё что приходит методом POST и FILE, что бы эти данные привязывались к конкретному пользователю.
+        if form.is_valid():
+            form.save()
+
+            return redirect('account')
+
+    context = {'form': form}
+    return render(request, 'users/profile_form.html', context)

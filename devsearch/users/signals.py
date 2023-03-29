@@ -12,7 +12,6 @@ from django.contrib.auth.models import User
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
     """Функция, объединяет пользователя с его профилем, при создании."""
-    print('Profile signal!')
     if created:
         user = instance
         profile = Profile.objects.create(
@@ -38,7 +37,6 @@ def update_user(sender, instance, created, **kwargs):
 @receiver(post_delete, sender=Profile)
 def delete_user(sender, instance, **kwargs):
     """Функция, отвечает за удаление пользователя"""
-    print('Deleting user...')
     user = instance.user
     user.delete()
 #
