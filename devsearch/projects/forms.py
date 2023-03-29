@@ -4,7 +4,7 @@ from django import forms # для изменения в форме поля Tags
 
 class ProjectForm(ModelForm):
     class Meta: # Что бы конкретно что-то выводилось на нашу страницу, какие поля попадали в элементы формы, нужен класс Meta.
-        model = Project
+        model = Project # Данные будем брать из модели Project
         fields = ['title', 'featured_image', 'description', 'demo_link', 'source_link', 'tags'] # какие поля попадут в форму
 
         widgets = {
