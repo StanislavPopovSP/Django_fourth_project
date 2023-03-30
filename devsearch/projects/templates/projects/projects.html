@@ -56,5 +56,15 @@
             </div>
         </div>
     </section>
+    <!-- Пагинация страницы -->
+    {% if projects.has_other_pages %} <!-- имеет другие страницы, кроме одной -->
+    <!-- тогда должны формировать какую то html разметку -->
+    <div class="paginator">
+        <ul class="container">
+
+        </ul>
+    </div>
+    {% endif %}
+
 </main>
 {% endblock %}
