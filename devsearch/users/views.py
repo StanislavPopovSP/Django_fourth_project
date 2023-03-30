@@ -117,6 +117,7 @@ def edit_account(request):
     context = {'form': form}
     return render(request, 'users/profile_form.html', context)
 
+
 @login_required(login_url='login')
 def create_skill(request):
     """Для добавления навыков"""
@@ -124,16 +125,17 @@ def create_skill(request):
     form = SkillForm()
 
     if request.method == 'POST':
-        form = SkillForm(request.POST) # мы получаем все данные кот-е будут отправляться методом POST
+        form = SkillForm(request.POST)  # мы получаем все данные кот-е будут отправляться методом POST
         if form.is_valid():
             skill = form.save(commit=False)
-            skill.owner = profile # связываем владельца скиллов с профилем
+            skill.owner = profile  # связываем владельца скиллов с профилем
             skill.save()
             messages.success(request, 'Skill was added successfully!')
             return redirect('account')
 
     context = {'form': form}
     return render(request, 'users/skill_form.html', context)
+
 
 @login_required(login_url='login')
 def update_skill(request, pk):
@@ -143,7 +145,7 @@ def update_skill(request, pk):
     form = SkillForm(instance=skill)
 
     if request.method == 'POST':
-        form = SkillForm(request.POST, instance=skill) # мы получаем все данные кот-е будут отправляться методом POST, что бы эти данные привязывались к конкретному пользователю.
+        form = SkillForm(request.POST, instance=skill)  # мы получаем все данные кот-е будут отправляться методом POST, что бы эти данные привязывались к конкретному пользователю.
         if form.is_valid():
             form.save()
             messages.success(request, 'Skill was update successfully!')
@@ -151,3 +153,18 @@ def update_skill(request, pk):
 
     context = {'form': form}
     return render(request, 'users/skill_form.html', context)
+
+
+@login_required(login_url='login')
+def delete_skill(request, pk):
+    profile = request.user.profile
+    skill = profile.skill_set.get(id=pk)
+
+    if request.method == "POST":
+        skill.delete()
+        messages.success(request, 'Skill was deleted successfully!')
+        return redirect('account')
+
+    context = {'object': skill}
+
+    return render(request, 'users/delete.html', context)
