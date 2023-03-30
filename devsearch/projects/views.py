@@ -67,7 +67,7 @@ def delete_project(request, pk):
 
     if request.method == 'POST':
         project.delete()
-        return redirect('projects')
+        return redirect('account')
 
     context = {'object': project}
 
