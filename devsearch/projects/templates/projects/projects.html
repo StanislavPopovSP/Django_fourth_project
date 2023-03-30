@@ -57,11 +57,17 @@
         </div>
     </section>
     <!-- Пагинация страницы -->
-    {% if projects.has_other_pages %} <!-- имеет другие страницы, кроме одной -->
+    {% if projects.has_other_pages %} <!-- .has_other_pages - имеет другие страницы, кроме одной(имеет готовые элементы кот-е находятся в пагинаторе) -->
     <!-- тогда должны формировать какую то html разметку -->
-    <div class="paginator">
+    <div class="pagination">
         <ul class="container">
-
+            {% for page in paginator.page_range %} <!-- диапазон наших страниц -->
+                {% if page == projects.number %} <!-- какой-то элемент должен быть обычным, а какой-то веделен, что бы было видно на какой странице находимся. Если номер страницы равен номеру текущей странице(перевод условия) -->
+                    <li><a href="?page={{ page }}" class="btn page-link btn--sub">{{ page }}</a></li> <!-- Какая-то кнопка должны быть активная, какая-то нет. ?page= - в адресной строке хотим что бы добавлялась что страница такая-то -->
+                {% else %}
+                    <li><a href="?page={{ page }}" class="btn page-link">{{ page }}</a></li>
+                {% endif %}
+            {% endfor %}
         </ul>
     </div>
     {% endif %}
