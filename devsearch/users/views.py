@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect
-from .models import Profile
+from .models import Profile, Skill
 from django.contrib.auth import logout, login, authenticate  # есть готовый элемент который делает разлогинивание
 from django.contrib.auth.models import User  # Нужно связать БД пользователей кот-я есть с моделью пользователей.
 from django.core.exceptions import ObjectDoesNotExist  # Нужно предусмотреть ошибку если пользователя не будет в БД. ObjectDoesNotExist - объект не существует.
 from django.contrib import messages  # Через ошибки message, можно вывести информацию для пользователя.
 from .forms import CustomUserCreationForm, ProfileForm, SkillForm
 from django.contrib.auth.decorators import login_required  # для закрытия доступа, незарегистрированных пользователей.
-
+from .utils import search_profiles
 
 def login_user(request):
     # Проверяет аутентификацию пользователя и отправляет данные для авторизации.
@@ -65,9 +65,13 @@ def logout_user(request):
 
 
 def profiles(request):
-    """Доступ ко всем объектам профиля, какого-то пользователя"""
-    prof = Profile.objects.all()
-    context = {'profiles': prof}
+    """Доступ к данным профиля, какого-то пользователя через функцию search_profiles, которая осуществляет еще поиск разработчиков."""
+    prof, search_query = search_profiles(request) # будет возвращать кортеж с данными, распаковываем в две переменные
+
+    context = {
+        'profiles': prof,
+        'search_query': search_query
+    }
     return render(request, 'users/index.html', context)
 
 
