@@ -24,7 +24,7 @@
         </div>
     </section>
 
-<!-- Search Result: DevList -->
+    <!-- Search Result: DevList -->
     <section class="projectsList">
         <div class="container">
             <div class="grid grid--three">
@@ -61,13 +61,23 @@
     <!-- тогда должны формировать какую то html разметку -->
     <div class="pagination">
         <ul class="container">
+
+            {% if projects.has_previous %} <!-- Добавим кнопку в лево до цифр(имеются предыдущие страницы) -->
+            <li><a href="?page={{ projects.previous_page_number }}" class="btn page-link">&lt; Prev</a></li> <!-- projects.previous_page_number - будет возвращаться предыдущий номер страницы. Если нам надо добавить стрелку, есть код стрелки - &lt;  -->
+            {% endif %}
+
             {% for page in paginator.page_range %} <!-- диапазон наших страниц -->
-                {% if page == projects.number %} <!-- какой-то элемент должен быть обычным, а какой-то веделен, что бы было видно на какой странице находимся. Если номер страницы равен номеру текущей странице(перевод условия) -->
-                    <li><a href="?page={{ page }}" class="btn page-link btn--sub">{{ page }}</a></li> <!-- Какая-то кнопка должны быть активная, какая-то нет. ?page= - в адресной строке хотим что бы добавлялась что страница такая-то -->
-                {% else %}
-                    <li><a href="?page={{ page }}" class="btn page-link">{{ page }}</a></li>
-                {% endif %}
+            {% if page == projects.number %} <!-- какой-то элемент должен быть обычным, а какой-то веделен, что бы было видно на какой странице находимся. Если номер страницы равен номеру текущей странице(перевод условия) -->
+            <li><a href="?page={{ page }}" class="btn page-link btn--sub">{{ page }}</a></li> <!-- Какая-то кнопка должны быть активная, какая-то нет. ?page= - в адресной строке хотим что бы добавлялась что страница такая-то -->
+            {% else %}
+            <li><a href="?page={{ page }}" class="btn page-link">{{ page }}</a></li>
+            {% endif %}
             {% endfor %}
+
+            {% if projects.has_next %} <!-- если имеется след страница, только тогда будет кнопка выводиться -->
+            <li><a href="?page={{ projects.next_page_number }}" class="btn page-link">&gt; Next</a></li> <!-- projects.previous_page_number - будет возвращаться предыдущий номер страницы. Если нам надо добавить стрелку, есть код стрелки - &lt;  -->
+            {% endif %}
+
         </ul>
     </div>
     {% endif %}
