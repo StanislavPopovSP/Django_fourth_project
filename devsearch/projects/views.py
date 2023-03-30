@@ -21,9 +21,24 @@ def projects(request):
         page = paginator.num_pages  # .num_pages - что бы кол-во страниц приходило(если 0, то значит 0).
         pr = paginator.page(page)
 
+    # Сделаем кол-во отображаемых страниц в пагинаторе.
+    left_index = int(page) - 4 # Что бы 4 элемента оставалась только видимых
+
+    if left_index < 1: # это значит нету страниц
+        left_index = 1 # Это когда будем переходить по стрелке в лево left_index = 1 - что бы не мог перейти на отрицательную страницу.
+
+    right_index = int(page) + 5
+
+    if right_index > paginator.num_pages: # .num_pages - кол-во страниц которое есть в данном случае.
+        right_index = paginator.num_pages + 1
+
+    # Эмитация страниц
+    custom_range = range(left_index, right_index)
+
     context = {
         'projects': pr,
-        'paginator': paginator
+        'paginator': paginator,
+        'custom_range': custom_range
     }
     return render(request, 'projects/projects.html', context)
 
