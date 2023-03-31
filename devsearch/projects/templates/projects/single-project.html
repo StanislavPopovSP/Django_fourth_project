@@ -41,13 +41,15 @@
                         Feedback ({{ project.vote_ratio }} Vote{{ project.vote_ratio|pluralize:'s' }})
                     </h5>
                     <!-- Форма отправки комментариев -->
-                    <form class="form" action="#" method="POST">
+                    <form class="form" action="{% url 'project' project.id %}" method="POST">
+                        {% csrf_token %}
+                        {% for field in form %}
                         <!-- Textarea -->
                         <div class="form__field">
-                            <label for="formInput#textarea">Comments: </label>
-                            <textarea class="input input--textarea" name="message" id="formInput#textarea"
-                                      placeholder="Write your comments here..."></textarea>
+                            <label for="formInput#textarea">{{ field.label }}</label>
+                            {{ field }}
                         </div>
+                        {% endfor %}
                         <input class="btn btn--sub btn--lg" type="submit" value="Comments"/>
                     </form>
                     <!-- Список комментариев -->

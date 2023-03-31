@@ -1,6 +1,24 @@
 from django.forms import ModelForm
-from .models import Project
+from .models import Project, Review
 from django import forms # для изменения в форме поля Tags
+
+
+class ReviewForm(ModelForm):
+    class Meta:
+        model = Review
+        fields = ['value', 'body']
+        labels = {
+            'value': 'Place your vote',
+            'body': 'Add a comment with your vote'
+        }
+    def __init__(self, *args, **kwargs):
+        """Инициализатор будет использовать любые элементы из родительского элемента, через наследование родительского класса."""
+        super().__init__(*args, **kwargs) # наследуемся от ModelForm
+        # .widget.attrs.update - виджеты, атрибуты, обновить(в виде словаря передать любые атрибуты которые мы хотим)
+
+        for name, field in self.fields.items():
+            field.widget.attrs.update({'class': 'input'})
+
 
 class ProjectForm(ModelForm):
     class Meta: # Что бы конкретно что-то выводилось на нашу страницу, какие поля попадали в элементы формы, нужен класс Meta.

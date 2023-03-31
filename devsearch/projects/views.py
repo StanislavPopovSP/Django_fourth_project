@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from .models import Project, Tag
-from .forms import ProjectForm
+from .forms import ProjectForm, ReviewForm
 from django.contrib.auth.decorators import login_required  # Декоратор для того что бы только пользователь смог что то делать
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage  # Для работы с пагинацией страниц PageNotAnInteger - работа с ошибками EmptyPage - пустая страница.
+from django.contrib import messages
 
 
 def projects(request):
@@ -32,7 +33,7 @@ def projects(request):
     if right_index > paginator.num_pages: # .num_pages - кол-во страниц которое есть в данном случае.
         right_index = paginator.num_pages + 1
 
-    # Эмитация страниц
+    # Кол-во страниц пагинации
     custom_range = range(left_index, right_index)
 
     context = {
@@ -44,9 +45,24 @@ def projects(request):
 
 
 def project(request, pk):
-    """Функция, отвечает за доступ конкретного поля таблицы"""
+    """Функция, отвечает за доступ конкретного поля таблицы, обработка комментариев"""
     project_obj = Project.objects.get(id=pk)
-    return render(request, 'projects/single-project.html', {'project': project_obj})
+    form = ReviewForm()
+
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        review = form.save(commit=False) # данные в БД не попадают
+        review.project = project_obj # Наш отзыв привязывается к конкретному проекту
+        review.owner = request.user.profile # привязываем владельца к профилю пользователя
+        review.save() # данные сохранили в БД
+        messages.success(request, 'Your review was successfully submitted!') # если все ок
+        return redirect('project', pk=project_obj.id)
+
+    context = {
+        'project': project_obj,
+        'form': form
+    }
+    return render(request, 'projects/single-project.html', context)
 
 
 @login_required(login_url='login')  # перенаправляет на страницу незарегистрированного пользователя
