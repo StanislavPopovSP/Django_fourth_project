@@ -16,6 +16,7 @@ class Project(models.Model):
     created = models.DateTimeField(auto_now_add=True)  # Дата создания какого-то проекта.
 
     def __str__(self):
+        """Заголовок проекта"""
         return self.title
 
 class Tag(models.Model):
@@ -24,6 +25,7 @@ class Tag(models.Model):
     created = models.DateTimeField(auto_now_add=True) # Дата создания тега
 
     def __str__(self):
+        """Имя тега"""
         return self.name
 
 
