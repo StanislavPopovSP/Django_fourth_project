@@ -19,6 +19,26 @@ class Project(models.Model):
         """Заголовок проекта"""
         return self.title
 
+    # Класс Meta отвечает за дополнительные настройки. (Пример способ сортировки)
+    class Meta:
+        """Порядок вывода элементов"""
+        ordering = ['-vote_total'] # Привяжемся к положительным либо отрицательным отзывам
+
+    def reviewers(self): # Что бы элементы считались
+        queryset = self.review_set.all().values_list('owner__id', flat=True) # через self.review_set.all() будем брать все данные, список значений(id владельца)
+        return queryset
+
+    def get_vote_count(self):
+        reviews = self.review_set.all()
+        up_votes = reviews.filter(value='up').count() # value='up' - как имя, количество
+        total_votes = reviews.count() # Сохраним общее количество отзывов.
+        ratio = (up_votes / total_votes) * 100 # рейтинг общий
+        self.vote_total = total_votes
+        self.vote_ratio = ratio
+
+        self.save()
+
+
 class Tag(models.Model):
     """Работа с тегами"""
     name = models.CharField(max_length=200)
