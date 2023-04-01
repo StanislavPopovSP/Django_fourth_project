@@ -30,13 +30,12 @@ class Project(models.Model):
 
     def get_vote_count(self):
         reviews = self.review_set.all()
-        up_votes = reviews.filter(value='up').count() # value='up' - как имя, количество
-        total_votes = reviews.count() # Сохраним общее количество отзывов.
-        ratio = (up_votes / total_votes) * 100 # рейтинг общий
-        self.vote_total = total_votes
-        self.vote_ratio = ratio
-
-        self.save()
+        up_votes = reviews.filter(value='up').count() # value='up' - как ключ, количество отзывов положительных
+        total_votes = reviews.count() # общее количество отзывов.
+        ratio = (up_votes / total_votes) * 100 # общий рейтинг положительных отзывов
+        self.vote_total = total_votes # сохранили в поле vote_total общее кол-во голосов
+        self.vote_ratio = ratio # сохранили в поле vote_ratio общий рейтинг положительных отзывов
+        self.save() # Сохранил текущий экземпляр.
 
 
 class Tag(models.Model):

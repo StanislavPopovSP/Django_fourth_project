@@ -55,6 +55,9 @@ def project(request, pk):
         review.project = project_obj # Наш отзыв привязывается к конкретному проекту
         review.owner = request.user.profile # привязываем владельца к профилю пользователя
         review.save() # данные сохранили в БД
+
+        project_obj.get_vote_count() # перезаписываем project_obj
+
         messages.success(request, 'Your review was successfully submitted!') # если все ок
         return redirect('project', pk=project_obj.id)
 

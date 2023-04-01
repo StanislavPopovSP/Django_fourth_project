@@ -10,18 +10,18 @@
                 <h3 class="singleProject__subtitle">Tools & Stacks</h3>
                 <div class="singleProject__toolStack">
                     {% for tag in project.tags.all %}
-                        <span class="tag tag--pill tag--sub tag--lg">
+                    <span class="tag tag--pill tag--sub tag--lg">
                           <small>{{ tag }}</small>
                         </span>
                     {% endfor %}
                 </div>
                 {% if project.source_link %} <!-- Проверка на наличие ссылки -->
-                    <a class="singleProject__liveLink" href="{{ project.source_link }}" target="_blank"><i class="im im-external-link"></i>Source Code
-                    </a>
+                <a class="singleProject__liveLink" href="{{ project.source_link }}" target="_blank"><i class="im im-external-link"></i>Source Code
+                </a>
                 {% endif %}
                 {% if project.demo_link %} <!-- Проверка на наличие ссылки -->
-                    <a class="singleProject__liveLink" href="{{ project.demo_link }}" target="_blank"><i class="im im-external-link"></i>Live Demo
-                    </a>
+                <a class="singleProject__liveLink" href="{{ project.demo_link }}" target="_blank"><i class="im im-external-link"></i>Live Demo
+                </a>
                 {% endif %}
             </div>
             <!-- Описание проекта -->
@@ -40,6 +40,14 @@
                         {{ project.vote_total }}% Postitive
                         Feedback ({{ project.vote_ratio }} Vote{{ project.vote_ratio|pluralize:'s' }})
                     </h5>
+
+                    <!-- Что бы комментарии могли ввести как зарегистрированный пользователь или незарегистрированный -->
+                    {% if request.user.profile.id in project.reviewers %} <!-- Если id пользователя находится внутри нашего project.review. Если уже отправляли свой отзыв будет данное сообщение. -->
+                    <p>You have already submitted your review for this project</p> <!-- Вы уже отправили свой отзыв на этот проект -->
+                    {% elif request.user.profile == project.owner %}
+                    <!-- Вы не можете прокомментировать свою работу -->
+                    <p>Your review your work</p> <!-- Ваш отзыв о вашей работе -->
+                    {% elif request.user.is_authenticated %} <!-- Если пользователь уже зарегистрирован, то тогда будет отображаться текущая форма. -->
                     <!-- Форма отправки комментариев -->
                     <form class="form" action="{% url 'project' project.id %}" method="POST">
                         {% csrf_token %}
@@ -52,6 +60,9 @@
                         {% endfor %}
                         <input class="btn btn--sub btn--lg" type="submit" value="Comments"/>
                     </form>
+                    {% else %} <!-- Если не аутентифицирован пользователь, пожалуйста войдите что бы оставить отзыв. -->
+                    <a href="{% url 'login' %}">Please login to leave a review</a> <!-- по ссылке перенаправим на  -->
+                    {% endif %}
                     <!-- Список комментариев -->
                     <div class="commentList">
                         {% for review in project.review_set.all %}
