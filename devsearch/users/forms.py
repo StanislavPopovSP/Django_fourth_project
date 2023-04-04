@@ -7,6 +7,7 @@ from django.forms import ModelForm # что бы данные брались и�
 class SkillForm(ModelForm):
     """Для добавления навыков"""
     class Meta:
+        """Вывод полей с их названиями"""
         model = Skill
         fields = '__all__' # Можем взять из модели все поля
         exclude = ['owner'] # Исключаем поля которые нам не нужны
@@ -21,8 +22,9 @@ class SkillForm(ModelForm):
 
 
 class ProfileForm(ModelForm):
-    """Форма для редактирования пользователя """
+    """Редактирования пользователя """
     class Meta:
+        """Вывод полей с их названиями"""
         model = Profile # Данные будем брать из модели Profile
         fields = ['name', 'email', 'username',
                   'bio', 'short_info', 'profile_image',
@@ -39,9 +41,9 @@ class ProfileForm(ModelForm):
 
 
 class CustomUserCreationForm(UserCreationForm):
-    """Форма, для регистрации пользователя"""
-
+    """Регистрации пользователя"""
     class Meta:
+        """Вывод полей с их названиями"""
         model = User
         fields = ['first_name', 'email', 'username', 'password1', 'password2']
         labels = {

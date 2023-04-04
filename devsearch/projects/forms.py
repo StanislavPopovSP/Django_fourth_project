@@ -4,7 +4,9 @@ from django import forms # для изменения в форме поля Tags
 
 
 class ReviewForm(ModelForm):
+    """Для комментариев"""
     class Meta:
+        """Вывод полей с их названиями"""
         model = Review
         fields = ['value', 'body']
         labels = {
@@ -21,7 +23,9 @@ class ReviewForm(ModelForm):
 
 
 class ProjectForm(ModelForm):
+    """Создания проекта."""
     class Meta: # Что бы конкретно что-то выводилось на нашу страницу, какие поля попадали в элементы формы, нужен класс Meta.
+        """Вывод полей с их названиями"""
         model = Project # Данные будем брать из модели Project
         fields = ['title', 'featured_image', 'description', 'demo_link', 'source_link', 'tags'] # какие поля попадут в форму
 
@@ -29,7 +33,7 @@ class ProjectForm(ModelForm):
             'tags': forms.CheckboxSelectMultiple()  # Вывел Checkbox поле теги
         }
 
-        # Добавим к форме стили которые предустановлены.
+    # Добавим к форме стили которые предустановлены.
     def __init__(self, *args, **kwargs):
         """Инициализатор будет использовать любые элементы из родительского элемента, через наследование родительского класса."""
         super().__init__(*args, **kwargs) # наследуемся от ModelForm

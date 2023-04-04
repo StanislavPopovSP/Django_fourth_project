@@ -31,3 +31,23 @@ class Skill(models.Model):
 
     def __str__(self):
         return f'{self.name}'
+
+
+class Message(models.Model):
+    """Для отправки сообщения"""
+    sender = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True, blank=True) # отправитель
+    recipient = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True, blank=True, related_name='message') # получатель, related_name - имя по кот-му мы сможем обратиться к данному полю, если какое-то поле по внешнему ключу мы хотим получать доступ, мы к нему не добавляли _set, в место этого мы можем обратиться по этому имени.
+    name = models.CharField(max_length=200, null=True, blank=True)
+    email = models.EmailField(max_length=200, null=True, blank=True) # работает как CharField, только валидация будет на ввод email, что бы была @ и один символ после собачки.
+    subject = models.CharField(max_length=200, null=True, blank=True) # тема письма
+    body = models.TextField() # тело сообщения, поле обязательное для заполнения
+    is_read = models.BooleanField(default=False, null=True) # нужно как-то отслеживать сообщение прочитано или нет, есть два состояния, либо прочитано, лио нет. По умолчанию не прочитанное сообщение. null=True - и уже программно будет, что сообщение прочитано.
+    created = models.DateTimeField(auto_now_add=True) # Дата создания этого сообщения
+
+    def __str__(self):
+        return f'{self.subject}'
+
+    # Надо что бы в Админке в какой-то последовательности выводились поля.
+    class Meta:
+        """Сортировка полей"""
+        ordering = ['is_read', '-created'] # Сначала прочитанные или нет, что бы непрочитанные были вверху. По дате создания.

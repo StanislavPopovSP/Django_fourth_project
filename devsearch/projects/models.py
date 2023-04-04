@@ -56,7 +56,7 @@ class Review(models.Model):
     ) # Будет два варианта положительный, либо отрицательный отзыв.
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True) # владелец отзыва. null=True - поле владельца может быть пустым и писать комментарий может любой пользователь и не зарегистрированный.
     project = models.ForeignKey(Project, on_delete=models.CASCADE) # делать поле пустым не будем, пот-то отзывы делаем по какому-то проекту. Обязательно поле проекты должно быть заполнено.
-    body = models.TextField(null=True, blank=True) # будет там отзыв, тело самого отзыва.
+    body = models.TextField(null=True, blank=True) # тело самого отзыва.
     value = models.CharField(max_length=200, choices=VOTE_TYPE) # а атрибут choices добавим VOTE_TYPE - будем выбирать один из элементов VOTE_TYPE. Из выпадающего списка будет выбираться одно из значений. max_length=200 - для текста выпадающего списка.
     created = models.DateTimeField(auto_now_add=True)
 

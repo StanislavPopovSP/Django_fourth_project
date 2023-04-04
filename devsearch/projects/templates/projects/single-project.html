@@ -42,12 +42,14 @@
                     </h5>
 
                     <!-- Что бы комментарии могли ввести как зарегистрированный пользователь или незарегистрированный -->
-                    {% if request.user.profile.id in project.reviewers %} <!-- Если id пользователя находится внутри нашего project.review. Если уже отправляли свой отзыв будет данное сообщение. -->
-                    <p>You have already submitted your review for this project</p> <!-- Вы уже отправили свой отзыв на этот проект -->
-                    {% elif request.user.profile == project.owner %}
+                    {% if request.user.profile.id in project.reviewers %} <!-- Если id пользователя находится внутри нашего project.reviewer. Если уже отправляли свой отзыв будет данное сообщение. -->
+                    <!-- Вы уже отправили свой отзыв на этот проект -->
+                    <p>You have already submitted your review for this project</p>
+                    {% elif request.user.profile == project.owner %} <!-- Если профиль равен проекту пользователя -->
                     <!-- Вы не можете прокомментировать свою работу -->
                     <p>Your review your work</p> <!-- Ваш отзыв о вашей работе -->
-                    {% elif request.user.is_authenticated %} <!-- Если пользователь уже зарегистрирован, то тогда будет отображаться текущая форма. -->
+                    <!-- Если пользователь уже авторизирован, то тогда будет отображаться текущая форма. -->
+                    {% elif request.user.is_authenticated %}
                     <!-- Форма отправки комментариев -->
                     <form class="form" action="{% url 'project' project.id %}" method="POST">
                         {% csrf_token %}
