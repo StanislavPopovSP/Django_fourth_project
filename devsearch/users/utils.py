@@ -11,7 +11,7 @@ def search_profiles(request):
     # поиск с точным совпадением навыков
     # skill = Skill.objects.filter(name__iexact=search_query)  # name__iexact - точное совпадение, search_query - то что будет написано в поисковой строке.
 
-    # поиск с побуквенным совпадением
+    # поиск с побуквенным совпадением навыков
     skill = Skill.objects.filter(name__icontains=search_query)
 
     profiles = Profile.objects.distinct().filter(

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Profile, Skill
+from .models import Profile, Skill, Message
 from django.contrib.auth import logout, login, authenticate  # есть готовый элемент который делает разлогинивание
 from django.contrib.auth.models import User  # Нужно связать БД пользователей кот-я есть с моделью пользователей.
 from django.core.exceptions import ObjectDoesNotExist  # Нужно предусмотреть ошибку если пользователя не будет в БД. ObjectDoesNotExist - объект не существует.
@@ -124,7 +124,7 @@ def edit_account(request):
 
 @login_required(login_url='login')
 def create_skill(request):
-    """Для добавления навыков"""
+    """Добавления навыков"""
     profile = request.user.profile
     form = SkillForm()
 
@@ -143,7 +143,7 @@ def create_skill(request):
 
 @login_required(login_url='login')
 def update_skill(request, pk):
-    """Для редактирования навыков"""
+    """Редактирования навыков"""
     profile = request.user.profile
     skill = profile.skill_set.get(id=pk)
     form = SkillForm(instance=skill)
@@ -161,6 +161,7 @@ def update_skill(request, pk):
 
 @login_required(login_url='login')
 def delete_skill(request, pk):
+    """Удаление навыков"""
     profile = request.user.profile
     skill = profile.skill_set.get(id=pk)
 
@@ -175,8 +176,15 @@ def delete_skill(request, pk):
 
 @login_required(login_url='login')
 def inbox(request):
-    context = {
+    """Доступ к сообщениям зарегистрированного пользователя"""
+    profile = request.user.profile
+    messages_requests = profile.messages.all() # message_requests = # из таблицы Message достаем все данные по имени related_name='messages'. Относительно пользователя достаем эти сообщения, что бы другие пользователи эти сообщения не видели.
+    # подсчёт прочитанных и не прочитанных сообщений
+    unread_count = messages_requests.filter(is_read=False).count()
 
+    context = {
+        'messages_requests': messages_requests, # все сообщения
+        'unread_count': unread_count # не прочитанные
     }
 
     return render(request, 'users/inbox.html', context)
