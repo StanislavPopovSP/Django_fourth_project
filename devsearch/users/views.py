@@ -8,6 +8,7 @@ from .forms import CustomUserCreationForm, ProfileForm, SkillForm
 from django.contrib.auth.decorators import login_required  # для закрытия доступа, незарегистрированных пользователей.
 from .utils import search_profiles
 
+
 def login_user(request):
     # Проверяет аутентификацию пользователя и отправляет данные для авторизации.
     if request.user.is_authenticated:
@@ -66,7 +67,7 @@ def logout_user(request):
 
 def profiles(request):
     """Доступ к данным профиля, какого-то пользователя через функцию search_profiles, которая осуществляет еще поиск разработчиков."""
-    prof, search_query = search_profiles(request) # будет возвращать кортеж с данными, распаковываем в две переменные
+    prof, search_query = search_profiles(request)  # будет возвращать кортеж с данными, распаковываем в две переменные
 
     context = {
         'profiles': prof,
@@ -174,17 +175,33 @@ def delete_skill(request, pk):
 
     return render(request, 'users/delete.html', context)
 
+
 @login_required(login_url='login')
 def inbox(request):
     """Доступ к сообщениям зарегистрированного пользователя"""
     profile = request.user.profile
-    messages_requests = profile.messages.all() # message_requests = # из таблицы Message достаем все данные по имени related_name='messages'. Относительно пользователя достаем эти сообщения, что бы другие пользователи эти сообщения не видели.
+    messages_requests = profile.messages.all()  # message_requests = # из таблицы Message достаем все данные по имени related_name='messages'. Относительно пользователя достаем эти сообщения, что бы другие пользователи эти сообщения не видели.
     # подсчёт прочитанных и не прочитанных сообщений
     unread_count = messages_requests.filter(is_read=False).count()
 
     context = {
-        'messages_requests': messages_requests, # все сообщения
-        'unread_count': unread_count # не прочитанные
+        'messages_requests': messages_requests,  # все сообщения
+        'unread_count': unread_count  # не прочитанные
     }
 
     return render(request, 'users/inbox.html', context)
+
+
+def view_message(request, pk):
+    """Открывает сообщение пользователя"""
+    profile = request.user.profile
+    message = profile.messages.get(id=pk)
+    if message.is_read is False:
+        message.is_read = True
+        message.save()
+
+    context = {
+        'message': message
+    }
+
+    return render(request, 'users/message.html', context)
