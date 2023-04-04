@@ -36,7 +36,7 @@ class Skill(models.Model):
 class Message(models.Model):
     """Для отправки сообщения"""
     sender = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True, blank=True) # отправитель
-    recipient = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True, blank=True, related_name='message') # получатель, related_name - имя по кот-му мы сможем обратиться к данному полю, если какое-то поле по внешнему ключу мы хотим получать доступ, мы к нему не добавляли _set, в место этого мы можем обратиться по этому имени.
+    recipient = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True, blank=True, related_name='messages') # получатель, related_name - имя по кот-му мы сможем обратиться к данному полю, если какое-то поле по внешнему ключу мы хотим получать доступ, мы к нему не добавляли _set, в место этого мы можем обратиться по этому имени.
     name = models.CharField(max_length=200, null=True, blank=True)
     email = models.EmailField(max_length=200, null=True, blank=True) # работает как CharField, только валидация будет на ввод email, что бы была @ и один символ после собачки.
     subject = models.CharField(max_length=200, null=True, blank=True) # тема письма

@@ -172,3 +172,11 @@ def delete_skill(request, pk):
     context = {'object': skill}
 
     return render(request, 'users/delete.html', context)
+
+@login_required(login_url='login')
+def inbox(request):
+    context = {
+
+    }
+
+    return render(request, 'users/inbox.html', context)
