@@ -17,4 +17,5 @@ urlpatterns = [
 
     path('inbox/', views.inbox, name='inbox'), # редактирование навыков
     path('message/<str:pk>/', views.view_message, name='message'), # для страницы отдельного сообщения
+    path('create-message/<str:pk>/', views.create_message, name='create-message'), # для страницы отдельного сообщения
 ]
