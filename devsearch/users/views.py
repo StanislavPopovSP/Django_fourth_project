@@ -4,7 +4,7 @@ from django.contrib.auth import logout, login, authenticate  # есть гото
 from django.contrib.auth.models import User  # Нужно связать БД пользователей кот-я есть с моделью пользователей.
 from django.core.exceptions import ObjectDoesNotExist  # Нужно предусмотреть ошибку если пользователя не будет в БД. ObjectDoesNotExist - объект не существует.
 from django.contrib import messages  # Через ошибки message, можно вывести информацию для пользователя.
-from .forms import CustomUserCreationForm, ProfileForm, SkillForm
+from .forms import CustomUserCreationForm, ProfileForm, SkillForm, MessageForm
 from django.contrib.auth.decorators import login_required  # для закрытия доступа, незарегистрированных пользователей.
 from .utils import search_profiles
 
@@ -191,7 +191,7 @@ def inbox(request):
 
     return render(request, 'users/inbox.html', context)
 
-
+@login_required(login_url='login')
 def view_message(request, pk):
     """Открывает сообщение пользователя"""
     profile = request.user.profile
@@ -205,3 +205,38 @@ def view_message(request, pk):
     }
 
     return render(request, 'users/message.html', context)
+
+
+def create_message(request, pk):
+    """Для заполнения и отправки сообщения"""
+    recipient = Profile.objects.get(id=pk)
+    form = MessageForm()
+
+    # Что бы не было ошибки при поиске отправителя
+    try:
+        sender = request.user.profile
+    except: # если пользователь не может получить данные
+        sender = None
+
+    if request.method == 'POST':
+        form = MessageForm(request.POST) # в данном поле пользователь будет вводить данные
+        if form.is_valid(): # проверка валидации
+            message = form.save(commit=False)
+            message.sender = sender # если валидные данные, то что бы сохранился отправитель
+            message.recipient = recipient # сохраняем получателя
+
+            if sender: # Если отправитель существует, у него только будет работать
+                message.name = sender.name
+                message.email = sender.email
+            message.save()
+
+            messages.success(request, 'Your message was successfully send!')
+            return redirect('user_profile', pk=recipient.id)
+
+
+    context = {
+        'recipient': recipient,
+        'form': form
+    }
+    return render(request, 'users/message_form.html', context)
+
