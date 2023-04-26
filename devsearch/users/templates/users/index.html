@@ -10,13 +10,15 @@
                 <h2>FROM AROUND THE WORLD</h2>
             </div>
 
+            <!-- Поиск проектов -->
             <div class="hero-section__search">
                 <form class="form" action="{% url 'profiles' %}" method="get">
                     <div class="form__field">
                         <label for="formInput#search">Search Developers </label>
+                        <!-- value="{{ search_query }}" - ключ внутри обработчика. -->
                         <input class="input input--text" id="formInput#search" type="text" name="search_query"
                                value="{{ search_query }}"
-                               placeholder="Search by developer name"/> <!-- Что бы видеть значение по какому запросу находиться будут данные value="{{ search_query }}" - ключ внутри обработчика с таким названием. -->
+                               placeholder="Search by developer name"/>
                     </div>
 
                     <input class="btn btn--sub btn--lg" type="submit" value="Search"/>
