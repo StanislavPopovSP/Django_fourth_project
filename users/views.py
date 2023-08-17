@@ -11,17 +11,17 @@ from .utils import search_profiles
 
 def login_user(request):
     # Проверяет аутентификацию пользователя и отправляет данные для авторизации.
-    if request.user.is_authenticated:
-        return redirect('profiles')
+    # if request.user.is_authenticated:
+    #     return redirect('profiles')
 
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
         # Хотим получить данные из модели по этому имени. Проверку сделать.
-        try:
-            user = User.objects.get(username=username)  # проверяем пользователя, если все ок, он уникальный
-        except ObjectDoesNotExist:  # если не ок
-            messages.error(request, 'Username does not exists')
+        # try:
+        #     user = User.objects.get(username=username)  # проверяем пользователя, если все ок, он уникальный
+        # except ObjectDoesNotExist:  # если не ок
+        #     messages.error(request, 'Username does not exists')
 
         user = authenticate(request, username=username, password=password)  # сохраняем
         if user is not None:  # если пользователь уникальный, авторизируй.
@@ -239,4 +239,3 @@ def create_message(request, pk):
         'form': form
     }
     return render(request, 'users/message_form.html', context)
-

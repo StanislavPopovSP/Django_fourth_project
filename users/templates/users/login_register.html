@@ -16,21 +16,20 @@
 
         <form action="{% url 'register' %}" method="post" class="form auth__form">
             {% csrf_token %}
+            <!-- Вывели поля формы -->
             {% for field in form %}
-            <!-- Input:Text -->
             <div class="form__field">
                 <label for="formInput#text">{{ field.label }}</label>
                 {{ field }}
-
+                <!-- Выводим ошибки если данные не верные -->
                 {% for error in field.errors %}
                     <p style="color: red;">{{ error }}</p>
                 {% endfor %}
-
             </div>
             {% endfor %}
-
+            <!-- Кнопка Регистрации -->
             <div class="auth__actions">
-                <input class="btn btn--sub btn--lg" type="submit" value="Sign  In"/>
+                <input class="btn btn--sub btn--lg" type="submit" value="Sign In"/>
             </div>
         </form>
         <div class="auth__alternative">

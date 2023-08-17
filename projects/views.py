@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Project, Tag
 from .forms import ProjectForm, ReviewForm
-from django.contrib.auth.decorators import login_required  # Декоратор для того что бы только пользователь смог что то делать
+from django.contrib.auth.decorators import login_required  # для закрытия доступа, незарегистрированных пользователей.
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage  # Для работы с пагинацией страниц PageNotAnInteger - работа с ошибками EmptyPage - пустая страница.
 from django.contrib import messages
 
